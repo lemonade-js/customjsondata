@@ -1,0 +1,17 @@
+[manifest]
+version = "1"
+dump_lua = true
+priority = 36210
+
+[[patches]]
+[patches.pattern]
+target = "main.lua"
+pattern = '''local gameDirectory = love.filesystem.getSourceBaseDirectory()'''
+position = "before"
+payload = '''
+CJD = {
+    chart = {},
+    variant = {}
+}
+'''
+match_indent = true

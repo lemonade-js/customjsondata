@@ -1,0 +1,27 @@
+[manifest]
+version = "1"
+dump_lua = true
+priority = 3621
+
+[[patches]]
+[patches.pattern]
+target = "levelformat/events/Vfx/ease.lua"
+pattern = '''cs:playbackError('Error while easing: Couldnt find key "' .. v .. '" in cs.'..event.var)
+return true'''
+position = "at"
+payload = '''
+-- meow :3
+'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "levelformat/events/Vfx/setBoolean.lua"
+pattern = '''if project.strictLoading then'''
+position = "at"
+payload = '''
+if false then --wtf why is this different from ease????
+-- ignore the boolean if the variable doesnt exist. allows for custom variables supported by other mods
+-- example: vfx.glitchProgressBar from lemontweaks (v3.2+)
+'''
+match_indent = true

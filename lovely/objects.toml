@@ -1,0 +1,24 @@
+[manifest]
+version = "1"
+dump_lua = true
+priority = 3621
+
+[[patches]]
+[patches.pattern]
+target = "obj/notes/Block.lua"
+pattern = '''self.missed = false'''
+position = "after"
+payload = '''
+self.customData = self.customData or {}
+'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = ["levelformat/events/Notes/block.lua", "levelformat/events/Notes/bounce.lua", "levelformat/events/Notes/extraTap.lua", "levelformat/events/Notes/hold.lua", "levelformat/events/Notes/inverse.lua", "levelformat/events/Notes/mine.lua", "levelformat/events/Notes/mineHold.lua", "levelformat/events/Notes/side.lua", "levelformat/events/Notes/trace.lua"]
+pattern = '''layerOffset = event.layerOffset'''
+position = "after"
+payload = '''
+,customData = event.customData or {}
+'''
+match_indent = true

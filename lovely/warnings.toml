@@ -1,0 +1,49 @@
+[manifest]
+version = "1"
+dump_lua = true
+priority = 36210
+
+[[patches]]
+[patches.pattern]
+target = "obj/OptionsList.lua"
+pattern = '''love.graphics.print(v.text,x,y)'''
+position = "at"
+payload = '''
+if v.disabled then color(2) end
+love.graphics.print(v.text,x,y)
+if v.disabled then color(1) end
+'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "states/SongSelect.lua"
+pattern = '''local playFunc = function ()
+	if not self.menuItems[self.selection].invalidLevel then
+		if self.menuItems[self.selection].isLevel then
+'''
+position = "after"
+payload = '''
+local skip = false
+if not skip and not self.menuItems[self.selection].properties.customData then skip = true end
+if not skip and not self.menuItems[self.selection].properties.customData.variants then skip = true end
+if not skip and not self.menuItems[self.selection].properties.customData.variants[menuItem.currVariant] then skip = true end
+if not skip and not self.menuItems[self.selection].properties.customData.variants[menuItem.currVariant].requirements then skip = true end
+if not skip and type(self.menuItems[self.selection].properties.customData.variants[menuItem.currVariant].requirements) ~= "table" then skip = true end
+
+if not skip then
+    local missing = {}
+
+    for _, requirement in ipairs(self.menuItems[self.selection].properties.customData.variants[menuItem.currVariant].requirements) do
+        if not mods[requirement] or not mods[requirement].enabled then table.insert(missing, requirement) end
+    end
+
+    if #missing > 0 then
+        PopupManager.queuePopup('Warning', 'The following required mods are missing:\n\n' .. table.concat(missing, "\n"), 60, {
+            {label='popupOK'}
+        })
+        return
+    end
+end
+'''
+match_indent = true

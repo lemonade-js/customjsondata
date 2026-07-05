@@ -1,0 +1,38 @@
+[manifest]
+version = "1"
+dump_lua = true
+priority = 3620
+
+[[patches]]
+[patches.pattern]
+target = "states/SongSelect.lua"
+pattern = '''menuItem.currVariant = menuItem.variants[1].name'''
+position = "after"
+payload = '''
+if self.menuItems[self.selection].properties.customData and self.menuItems[self.selection].properties.customData.variants then
+    CJD.variant = self.menuItems[self.selection].properties.customData.variants[menuItem.currVariant] or {}
+end
+'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "obj/LevelManager.lua"
+pattern = '''level.metadata = manifest.metadata'''
+position = "after"
+payload = '''
+if manifest.properties.customData and manifest.properties.customData.variants then
+    CJD.variant = manifest.properties.customData.variants[variant.name] or {}
+end
+'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "states/Game.lua"
+pattern = '''self.variant = variant'''
+position = "after"
+payload = '''
+LevelManager:loadLevel(cLevel, self.variant)
+'''
+match_indent = true

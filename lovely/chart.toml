@@ -1,0 +1,36 @@
+[manifest]
+version = "1"
+dump_lua = true
+priority = 3621
+
+[[patches]]
+[patches.pattern]
+target = "states/SongSelect.lua"
+pattern = '''menuItem.source = levelMetadata.metadata.source or '''''
+position = "after"
+payload = '''
+menuItem.properties = levelMetadata.properties
+'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "states/SongSelect.lua"
+pattern = '''if self.menuItems[self.selection].isLevel then'''
+position = "after"
+payload = '''
+CJD.chart = self.menuItems[self.selection].properties.customData or {}
+'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "obj/LevelManager.lua"
+pattern = '''manifest.properties = {}'''
+position = "at"
+payload = '''
+-- made this a comment to avoid customData from being lost
+-- does this have any negative side effects? idk, we'll see
+--manifest.properties = {}
+'''
+match_indent = true
