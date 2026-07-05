@@ -32,5 +32,8 @@ payload = '''
 -- made this a comment to avoid customData from being lost
 -- does this have any negative side effects? idk, we'll see
 --manifest.properties = {}
+
+-- yeah it does. im still leaving these comments here bc funny
+manifest.properties = manifest.properties or {}
 '''
 match_indent = true

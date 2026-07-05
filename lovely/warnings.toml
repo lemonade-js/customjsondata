@@ -24,17 +24,19 @@ pattern = '''local playFunc = function ()
 '''
 position = "after"
 payload = '''
+local _item = self.menuItems[self.selection]
+
 local skip = false
-if not skip and not self.menuItems[self.selection].properties.customData then skip = true end
-if not skip and not self.menuItems[self.selection].properties.customData.variants then skip = true end
-if not skip and not self.menuItems[self.selection].properties.customData.variants[menuItem.currVariant] then skip = true end
-if not skip and not self.menuItems[self.selection].properties.customData.variants[menuItem.currVariant].requirements then skip = true end
-if not skip and type(self.menuItems[self.selection].properties.customData.variants[menuItem.currVariant].requirements) ~= "table" then skip = true end
+if not skip and not _item.properties.customData then skip = true end
+if not skip and not _item.properties.customData.variants then skip = true end
+if not skip and not _item.properties.customData.variants[_item.currVariant] then skip = true end
+if not skip and not _item.properties.customData.variants[_item.currVariant].requirements then skip = true end
+if not skip and type(_item.properties.customData.variants[_item.currVariant].requirements) ~= "table" then skip = true end
 
 if not skip then
     local missing = {}
 
-    for _, requirement in ipairs(self.menuItems[self.selection].properties.customData.variants[menuItem.currVariant].requirements) do
+    for _, requirement in ipairs(_item.properties.customData.variants[_item.currVariant].requirements) do
         if not mods[requirement] or not mods[requirement].enabled then table.insert(missing, requirement) end
     end
 

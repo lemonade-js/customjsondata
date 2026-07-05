@@ -9,8 +9,10 @@ target = "states/SongSelect.lua"
 pattern = '''menuItem.currVariant = menuItem.variants[1].name'''
 position = "after"
 payload = '''
-if self.menuItems[self.selection].properties.customData and self.menuItems[self.selection].properties.customData.variants then
-    CJD.variant = self.menuItems[self.selection].properties.customData.variants[menuItem.currVariant] or {}
+local _item = self.menuItems[self.selection]
+
+if _item.properties.customData and _item.properties.customData.variants then
+    CJD.variant = _item.properties.customData.variants[_item.currVariant] or {}
 end
 '''
 match_indent = true
